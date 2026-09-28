@@ -94,6 +94,22 @@
   .left{text-align:center;font-size:13px;font-weight:800;color:var(--muted);margin-top:6px}
   .left b{color:var(--accent);font-size:18px;font-variant-numeric:tabular-nums}
   .stamp{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+  .tiger{width:130px;height:auto;margin:2px auto -2px;display:block;overflow:visible}
+  .tigermsg{font-family:var(--display);font-size:clamp(18px,5.5vw,24px);line-height:1.3}
+  .result .prize{font-size:clamp(20px,6vw,27px)}
+  .tg-bounce{transform-box:fill-box;transform-origin:50% 100%;animation:bounce .7s ease-in-out infinite}
+  @keyframes bounce{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-7px) scale(1.03)}}
+  .tg-star{transform-box:fill-box;transform-origin:center;animation:twinkle 1s ease-in-out infinite}
+  .tg-star2{transform-box:fill-box;transform-origin:center;animation:twinkle 1s ease-in-out .5s infinite}
+  @keyframes twinkle{0%,100%{opacity:.4;transform:scale(.8)}50%{opacity:1;transform:scale(1.2)}}
+  .tg-droop{transform-box:fill-box;transform-origin:50% 100%;animation:droop 2.4s ease-in-out infinite}
+  @keyframes droop{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(3px) rotate(-2deg)}}
+  .tg-tearL,.tg-tearR{transform-box:fill-box;transform-origin:50% 0;animation:tear 1.8s ease-in-out infinite}
+  .tg-tearR{animation-delay:.6s}
+  @keyframes tear{0%{opacity:0;transform:translateY(-4px) scaleY(.6)}30%{opacity:.9}100%{opacity:0;transform:translateY(10px) scaleY(1.1)}}
+  @media (prefers-reduced-motion: reduce){
+    .tg-bounce,.tg-star,.tg-star2,.tg-droop,.tg-tearL,.tg-tearR{animation:none}
+  }
 
   .btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
   .btn{
@@ -147,9 +163,9 @@
 <script>
 (function(){
   const PRIZES = [
-    {short:"焼肉", text:"吉川さんに焼肉をおごる"},
-    {short:"キャバクラ", text:"吉川さんにキャバクラをおごる"},
-    {short:"言う事5個", text:"吉川さんの言う事を5個聞く"}
+    {short:"焼肉", text:"吉川さんに焼肉をおごる", win:true},
+    {short:"キャバクラ", text:"吉川さんにキャバクラをおごる", win:false},
+    {short:"言う事5個", text:"吉川さんの言う事を5個聞く", win:false}
   ];
   const BOXES = [
     {key:"gold",   name:"金の宝箱", c:"var(--gold)",   d:"var(--gold-d)"},
@@ -183,6 +199,47 @@
   function leftBadge(){
     const n = left();
     return `<div class="left">今日の残り <b>${n}</b> / ${DAILY_MAX} 回</div>`;
+  }
+
+  function tigerSVG(win){
+    if(win){
+      // 喜んでいる虎
+      return `
+      <svg class="tiger" viewBox="0 0 140 130" aria-hidden="true">
+        <g class="tg-bounce">
+          <path d="M30 34 L20 14 L40 26Z M110 34 L120 14 L100 26Z" fill="#f59331" stroke="#b5610f" stroke-width="2.5" stroke-linejoin="round"/>
+          <path d="M28 20 L23 20 M112 20 L117 20" stroke="#ffd08a" stroke-width="3" stroke-linecap="round"/>
+          <ellipse cx="70" cy="62" rx="46" ry="42" fill="#f7a23c"/>
+          <path d="M70 20 Q86 26 88 44 L82 44 Q80 30 70 26 Q60 30 58 44 L52 44 Q54 26 70 20Z" fill="#fff3e0"/>
+          <path d="M70 24 V52 M46 34 Q40 44 42 56 M94 34 Q100 44 98 56 M30 66 Q22 66 20 72 M110 66 Q118 66 120 72" stroke="#3a2213" stroke-width="3" stroke-linecap="round" fill="none"/>
+          <ellipse cx="70" cy="82" rx="30" ry="24" fill="#fff3e0"/>
+          <path d="M52 62 Q57 55 63 61 M88 62 Q83 55 77 61" stroke="#3a2213" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+          <path d="M64 84 Q70 88 76 84" fill="none" stroke="#3a2213" stroke-width="2"/>
+          <path d="M70 74 L66 80 Q70 84 74 80Z" fill="#e26d5c"/>
+          <path d="M58 92 Q70 104 82 92" fill="none" stroke="#3a2213" stroke-width="3.5" stroke-linecap="round"/>
+          <circle cx="46" cy="86" r="6" fill="#ff9db0" opacity=".7"/>
+          <circle cx="94" cy="86" r="6" fill="#ff9db0" opacity=".7"/>
+          <path d="M40 40 l3 6 l6 1 l-4.5 4 l1 6 l-5.5 -3 l-5.5 3 l1 -6 l-4.5 -4 l6 -1Z" fill="var(--gold)" class="tg-star"/>
+          <path d="M104 46 l2.5 5 l5 1 l-3.7 3.3 l0.9 5 l-4.7 -2.5 l-4.7 2.5 l0.9 -5 l-3.7 -3.3 l5 -1Z" fill="var(--gold)" class="tg-star2"/>
+        </g>
+      </svg>`;
+    }
+    // 泣いて落ち込んでいる虎
+    return `
+      <svg class="tiger" viewBox="0 0 140 130" aria-hidden="true">
+        <g class="tg-droop">
+          <path d="M30 40 L20 22 L40 32Z M110 40 L120 22 L100 32Z" fill="#c98a53" stroke="#8a5a2a" stroke-width="2.5" stroke-linejoin="round"/>
+          <ellipse cx="70" cy="66" rx="46" ry="42" fill="#d9a066"/>
+          <path d="M70 24 Q86 30 88 48 L82 48 Q80 34 70 30 Q60 34 58 48 L52 48 Q54 30 70 24Z" fill="#f3ead9"/>
+          <path d="M70 28 V56 M46 38 Q40 48 42 60 M94 38 Q100 48 98 60 M30 70 Q22 70 20 76 M110 70 Q118 70 120 76" stroke="#4a3423" stroke-width="3" stroke-linecap="round" fill="none"/>
+          <ellipse cx="70" cy="86" rx="30" ry="24" fill="#f3ead9"/>
+          <path d="M50 60 Q56 66 62 62 M90 60 Q84 66 78 62" stroke="#4a3423" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+          <path d="M56 66 Q57 78 55 92 Q53 100 58 102 Q62 100 60 90 Q60 78 60 68Z" fill="#7ec8f0" opacity=".85" class="tg-tearL"/>
+          <path d="M84 66 Q83 78 85 92 Q87 100 82 102 Q78 100 80 90 Q80 78 80 68Z" fill="#7ec8f0" opacity=".85" class="tg-tearR"/>
+          <path d="M70 78 L66 84 Q70 88 74 84Z" fill="#c96b5c"/>
+          <path d="M60 98 Q70 90 80 98" fill="none" stroke="#4a3423" stroke-width="3.5" stroke-linecap="round"/>
+        </g>
+      </svg>`;
   }
 
   function shuffle(a){
@@ -261,16 +318,10 @@
       el.classList.remove("shake");
       el.classList.add("open","picked");
       el.querySelector(".inside").textContent = assign[i].text;
-      btns.forEach((b,k)=>{ if(k!==i) b.classList.add("dim"); });
+      // 選ばなかった箱は中身を見せない（閉じたまま・薄く表示）
+      btns.forEach((b,k)=>{ if(k!==i){ b.classList.add("dim"); b.querySelector(".inside").textContent = "？？？"; } });
       showResult(i);
-      setTimeout(()=>{
-        btns.forEach((b,k)=>{
-          if(k===i) return;
-          b.classList.add("open");
-          b.querySelector(".inside").textContent = "（ハズレ側）"+assign[k].short;
-        });
-        done = true; busy = false;
-      }, 900);
+      done = true; busy = false;
     }, 1000);
   }
 
@@ -285,6 +336,8 @@
     resultArea.innerHTML = `
       <div class="result pop">
         <div class="who">${who ? escapeHTML(who)+"さんの" : ""}${BOXES[i].name}の中身は…</div>
+        ${tigerSVG(assign[i].win)}
+        <div class="tigermsg">${assign[i].win ? "やったー！大当たり！🎉" : "ざんねん…😭"}</div>
         <div class="prize">${assign[i].text}！</div>
         <div class="stamp">引いた人：${who ? escapeHTML(who)+"さん" : "（名前なし）"} ／ ${drawTime}</div>
         <div class="btns">
