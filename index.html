@@ -181,6 +181,12 @@
   try{ const n = localStorage.getItem("kuji-name"); if(n) player.value = n; }catch(e){}
   player.addEventListener("input", ()=>{ try{ localStorage.setItem("kuji-name", player.value); }catch(e){} });
 
+  // 動作確認用の隠しリセット：URLに #reset を付けて開くと今日の回数がゼロに戻る
+  if(location.hash.toLowerCase().indexOf("reset") !== -1){
+    try{ localStorage.removeItem("kuji-daily"); }catch(e){}
+    try{ history.replaceState(null, "", location.pathname); }catch(e){}
+  }
+
   const DAILY_MAX = 3;
   function today(){
     const d = new Date();
